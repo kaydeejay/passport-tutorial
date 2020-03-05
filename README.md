@@ -6,16 +6,16 @@ Build a basic Node/Express app that allows a user to create a username and passw
 
 This build utilizes sequelize-cli to build the application quickly.
 
-Create a directory that will contain the app
+Create a directory that will contain the app\
 ```mkdir passport-demo```
 
-Install our dependencies.
+Install our dependencies.\
 ```npm i bcryptjs express express-session mysql2 passport passport-local sequelize```
 
-Install sequelize-cli as a dev dependency:
+Install sequelize-cli as a dev dependency:\
 ```npm i --save-dev sequelize-cli```
 
-Your directory will now look like this: 
+Your directory will now look like this:
 ```
 /
   node_modules
