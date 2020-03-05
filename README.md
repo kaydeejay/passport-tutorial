@@ -37,10 +37,11 @@ in package-lock.json, add to “scripts” so that it looks like this:
   // npm run watch
 ```
 
-In a terminal window, at your app’s root directory, run:
-npx sequelize-cli init
+In a terminal window, at your app’s root directory, run:\
+```npx sequelize-cli init```
 
-your directory will now look like this:
+your directory will now look like this:\
+```
 /
   /config
     config.json
@@ -51,35 +52,39 @@ your directory will now look like this:
   /seeders
 package-lock.json
 package.json
+```
 
-In /config/config.json, add your mysql username, password, and desired database name to ‘development’. Assuming username is “root”, password is “password”, and database name is “passport_db” 
+In ```/config/config.json```, add your mysql username, password, and desired database name to ‘development’. Assuming username is “root”, password is “password”, and database name is “passport_db”\
+```
 "development": {
   "username": "<your username>",
   "password": "<your password>",
   "database": "passport_db"
 }
+```
 
-Use mysql to create the database: In a terminal window, run mysql:
-mysql -u root -p
+Use mysql to create the database: In a terminal window, run mysql:\
+```mysql -u root -p```
 
-Enter mysql password when prompted:
-Enter Password: ********
+Enter mysql password when prompted:\
+```Enter Password: ********```
 
-Once mysql is running:
-mysql> CREATE DATABASE password_db;
+Once mysql is running:\
+```mysql> CREATE DATABASE password_db;```
 
-Check that it worked, you should see password_db when you run:
-mysql> SHOW DATABASES;
+Check that it worked, you should see password_db when you run:\
+```mysql> SHOW DATABASES;```
 
-Exit mysql:
-exit
+Exit mysql:\
+```exit```
 
-Use sequelize-cli to create a User Model. IN ONE LINE:
-npx sequelize-cli model:generate --name User --attributes email:string,password:string
+Use sequelize-cli to create a User Model.\
+```npx sequelize-cli model:generate --name User --attributes email:string,password:string```
 
 This will create a new user model file in the models folder, and a new user migration file in the migrations folder. The model file is like a Class that will create a new User object, which sequelize will then add to the mysql database.
 
-Your file structure should now look like this:
+Your file structure should now look like this:\
+```
 /
   config/
     config.json
@@ -92,10 +97,12 @@ Your file structure should now look like this:
   seeders/
   package-lock.json
   package.json
+```
 
 We will ignore seeders/ for now. Optionally, you can create seed files that you can use to create demo data for your database. More on that can be found here.
 
-Open models/user.js, we need to add some stuff. This is what the file will look like already:
+Open models/user.js, we need to add some stuff. This is what the file will look like already:\
+```
 ‘use strict’;
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(‘User’, {
@@ -107,11 +114,10 @@ module.exports = (sequelize, DataTypes) => {
   };
   return User;
 };
+```
 
-
-
-
-And this is with the additions we will make:
+And this is with the additions we will make:\
+```
 const bcrypt = require("bcryptjs");
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(“User”, {
@@ -142,14 +148,14 @@ module.exports = (sequelize, DataTypes) => {
   });
   return User;
 }
+```
 
+Now we need to add some middleware that will restrict routes only to users who are logged in. Make a directory in `config/` called `middleware`, and a new file `isAuthenticated.js` inside that folder. We can do this by running the following command in a terminal window at your app’s root directory:\
+```mkdir config/middleware && touch config/middleware/isAuthenticated.js```
 
+Open up `config/middleware/isAuthenticated.js` and write the following:
 
-Now we need to add some middleware that will restrict routes only to users who are logged in. Make a directory in `config/` called `middleware`, and a new file `isAuthenticated.js` inside that folder. We can do this by running the following command in a terminal window at your app’s root directory:
-mkdir config/middleware && touch config/middleware/isAuthenticated.js
-
-Open up config/middleware/isAuthenticated.js and write the following:
-
+```
 module.exports = (req, res, next) => {
   // if the request does not contain user’s data,
   if (req.user) {
@@ -158,12 +164,14 @@ module.exports = (req, res, next) => {
   // otherwise send them back to the homepage
   return res.redirect(“/”);
 }
+```
 
-We will also add a configuration for passport in config/
-In a terminal window at your app’s root directory, run the following:
-touch config/passport.js
+We will also add a configuration for passport in `config/`
+In a terminal window at your app’s root directory, run the following:\
+```touch config/passport.js```
 
-open config/passport.js and add the following:
+open config/passport.js and add the following:\
+```
 const passport = require("passport");
 const LocalStrategy = require(“passport-local”).Strategy;
 
@@ -215,14 +223,16 @@ passport.deserializeUser((obj, cb) => {
 });
 
 module.exports = passport;
+```
 
 More on Strategies can be found here
 
 Express Server and Routes:
-In a terminal window in the root directory of your app, run the following command:
-touch server.js
+In a terminal window in the root directory of your app, run the following command:\
+```touch server.js```
 
-In server.js, write the following:
+In server.js, write the following:\
+```
 const express = require("express");
 const session = require(“express-session”);
 // require our passport.js file, 
@@ -264,10 +274,10 @@ db.sequelize.sync().then(() => {
     console.log(`app listening on ${PORT}, visit http://localhost:${PORT}`);
   });
 });
+```
 
 To finish out the back-end, let’s add our routes.
-In a terminal window at your app’s root directory, run the following command:
-mkdir routes && touch routes/api-routes.js routes/html-routes.js
+In a terminal window at your app’s root directory, run the following command:\
+```mkdir routes && touch routes/api-routes.js routes/html-routes.js```
 
-Open up routes/api-routes.js and write the following:
-
+Open up routes/api-routes.js and write the following:\
