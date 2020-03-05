@@ -136,7 +136,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   // uses the bcryptjs library to check if the unhashed password entered by
   // the user matches the encrypted password already stored in the database
-  User.prototype.validPassword = (password) => {
+  User.prototype.validPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
   };
   // Before a user is created, their password is automatically hashed:
