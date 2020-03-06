@@ -1,7 +1,7 @@
 # passport-tutorial
-A Tutorial to build a quick express server that uses passport to enable creating user credentials and logging in.
+A Tutorial to build a quick express server that uses passport and sequelize to enable creating user credentials and logging in.
 
-## Passport Demo
+## Passport/Sequelize Demo
 Build a basic Node/Express app that allows a user to create a username and password, and log onto the application using npm package `passport`. The user data is stored in a mysql database.
 
 This build utilizes sequelize-cli to build the application quickly.
@@ -235,9 +235,10 @@ passport.deserializeUser((obj, cb) => {
 module.exports = passport;
 ```
 
-More on Strategies can be found here
+More on Strategies can be found [here](http://www.passportjs.org/docs/configure/).
 
-Express Server and Routes:
+## Express Server and Routes
+
 In a terminal window in the root directory of your app, run the following command:\
 ```touch server.js```
 
@@ -287,10 +288,10 @@ db.sequelize.sync().then(() => {
 ```
 
 To finish out the back-end, let’s add our routes.
-In a terminal window at your app’s root directory, run the following command:\
+In a terminal window at your app’s root directory, run the following command:
 ```mkdir routes && touch routes/api-routes.js routes/html-routes.js```
 
-Open up routes/api-routes.js and write the following:\
+Open up routes/api-routes.js and write the following:
 ```
 // import models and passport config
 const db = require("../models");
@@ -358,7 +359,7 @@ Our server.js file will require these api routes. This file will determine the l
 
 `html-routes.js`, on the other hand, will send static pages back to the user when the front end makes the relevant calls.
 
-routes/html-routes.js:\
+routes/html-routes.js:
 ```
 const path = require("path");
 
@@ -406,15 +407,15 @@ module.exports = (app) => {
 In a terminal window at the root directory, run:\
 ```mkdir public && mkdir public/js public/stylesheets```
 
-Create the html files:\
+Create the html files:
 ```
 touch public/login.html public/members.html public/signup.html
 ```
 
-Create the css file:\
+Create the css file:
 ```touch public/stylesheets/style.css```
 
-Create the js files:\
+Create the js files:
 ```touch public/js/login.js public/js/members.js public/js/signup.js```
 
 ### js files:
