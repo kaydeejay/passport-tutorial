@@ -6,13 +6,19 @@ Build a basic Node/Express app that allows a user to create a username and passw
 
 This build utilizes sequelize-cli to build the application quickly.
 
-Create a directory that will contain the app\
+Prerequisites: 
+- MySQL
+- Node
+- NPM
+- Nodemon
+
+Create a directory that will contain the app.
 ```mkdir passport-demo```
 
-Install our dependencies.\
+Install dependencies.
 ```npm i bcryptjs express express-session mysql2 passport passport-local sequelize```
 
-Install sequelize-cli as a dev dependency:\
+Install sequelize-cli as a dev dependency:
 ```npm i --save-dev sequelize-cli```
 
 Your directory will now look like this:
@@ -31,16 +37,13 @@ in package-lock.json, add to “scripts” so that it looks like this:
   “start”: “node server.js”,
   “watch”: “nodemon server.js”
   }
-  // this allows you to run the node server by entering the command
-  // npm run start
-  // and to run the server with nodemon
-  // npm run watch
 ```
+  This allows you to run the node server by entering the command `npm run start`, and to run the server with nodemon `npm run watch`.
 
-In a terminal window, at your app’s root directory, run:\
+In a terminal window, at your app’s root directory, run:
 ```npx sequelize-cli init```
 
-your directory will now look like this:\
+your directory will now look like this:
 ```
 /
   /config
@@ -54,36 +57,40 @@ package-lock.json
 package.json
 ```
 
-In ```/config/config.json```, add your mysql username, password, and desired database name to ‘development’. Assuming username is “root”, password is “password”, and database name is “passport_db”\
+In ```/config/config.json```, add your mysql username, password, and desired database name to ‘development’. Replace all values in angle brackets with your own data.
 ```
 "development": {
-  "username": "<your username>",
-  "password": "<your password>",
-  "database": "passport_db"
+  "username": "<mysql username>",
+  "password": "<password>",
+  "database": "<databse_name>"
 }
 ```
 
-Use mysql to create the database: In a terminal window, run mysql:\
+## Use mysql to create the database:
+
+In a terminal window, run mysql:
 ```mysql -u root -p```
 
-Enter mysql password when prompted:\
+Enter mysql password when prompted:
 ```Enter Password: ********```
 
-Once mysql is running:\
+Once mysql is running:
 ```mysql> CREATE DATABASE password_db;```
 
-Check that it worked, you should see password_db when you run:\
+Check that it worked, you should see password_db when you run:
 ```mysql> SHOW DATABASES;```
 
-Exit mysql:\
-```exit```
+Exit mysql:
+```mysql> exit```
 
-Use sequelize-cli to create a User Model.\
+## Use sequelize-cli to create a User Model.
+
+In a terminal window at your app's route directory:
 ```npx sequelize-cli model:generate --name User --attributes email:string,password:string```
 
 This will create a new user model file in the models folder, and a new user migration file in the migrations folder. The model file is like a Class that will create a new User object, which sequelize will then add to the mysql database.
 
-Your file structure should now look like this:\
+Your file structure should now look like this:
 ```
 /
   config/
@@ -99,9 +106,9 @@ Your file structure should now look like this:\
   package.json
 ```
 
-We will ignore seeders/ for now. Optionally, you can create seed files that you can use to create demo data for your database. More on that can be found here.
+We will ignore seeders/ for now. Optionally, you can create seed files that you can use to create demo data for your database. More on that can be found [here](https://sequelize.org/master/manual/migrations.html).
 
-Open models/user.js, we need to add some stuff. This is what the file will look like already:\
+Open models/user.js, we need to add some stuff. This is what the file will look like already:
 ```
 ‘use strict’;
 module.exports = (sequelize, DataTypes) => {
@@ -116,7 +123,7 @@ module.exports = (sequelize, DataTypes) => {
 };
 ```
 
-And this is with the additions we will make:\
+And this is with the changes we will make:
 ```
 const bcrypt = require("bcryptjs");
 module.exports = (sequelize, DataTypes) => {
@@ -150,6 +157,8 @@ module.exports = (sequelize, DataTypes) => {
 }
 ```
 
+## isAuthenticated Middleware
+
 Now we need to add some middleware that will restrict routes only to users who are logged in. Make a directory in `config/` called `middleware`, and a new file `isAuthenticated.js` inside that folder. We can do this by running the following command in a terminal window at your app’s root directory:\
 ```mkdir config/middleware && touch config/middleware/isAuthenticated.js```
 
@@ -157,7 +166,7 @@ Open up `config/middleware/isAuthenticated.js` and write the following:
 
 ```
 module.exports = (req, res, next) => {
-  // if the request does not contain user’s data,
+  // if the request contains user’s data,
   if (req.user) {
     return next();
   }
@@ -166,11 +175,12 @@ module.exports = (req, res, next) => {
 }
 ```
 
-We will also add a configuration for passport in `config/`
+## Configure Passport
+
 In a terminal window at your app’s root directory, run the following:\
 ```touch config/passport.js```
 
-open config/passport.js and add the following:\
+open `config/passport.js` and write the following:
 ```
 const passport = require("passport");
 const LocalStrategy = require(“passport-local”).Strategy;
