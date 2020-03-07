@@ -13,6 +13,7 @@ Prerequisites:
 - Nodemon
 
 Create a directory that will contain the app.
+In a terminal window, `cd` to wherever you want your application to live, then run:
 ```mkdir passport-demo```
 
 Install dependencies.
