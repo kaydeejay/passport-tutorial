@@ -26,7 +26,7 @@ Your directory will now look like this:
 ```
 /
   node_modules
-  package=lock.json
+  package-lock.json
   package.json
 ```
 
